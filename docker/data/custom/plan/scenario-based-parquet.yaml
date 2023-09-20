@@ -1,0 +1,14 @@
+name: "account_and_transactions_scenario"
+description: "Create accounts and transactions in Postgres and parquet"
+tasks:
+  - name: "postgres_account"
+    dataSourceName: "postgres"
+    enabled: true
+  - name: "parquet_transaction_file"
+    dataSourceName: "parquet"
+    enabled: true
+    
+sinkOptions:
+  foreignKeys:
+    - - "postgres.accounts.account_number"
+      - - "parquet.transactions.account_id"

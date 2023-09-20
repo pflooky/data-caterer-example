@@ -30,3 +30,44 @@ Requires:
 ./run.sh
 <input class name>
 ```
+
+## Docker
+
+Create your own Docker image via:
+  
+```shell
+./gradlew clean build
+docker build -t <my_image_name>:<my_image_tag> .
+docker run -e PLAN_CLASS=com.github.pflooky.plan.DocumentationPlanRun -v ${PWD}/docs/run:/opt/app/data <my_image_name>:<my_image_tag>
+#check results under docs/run folder
+```
+
+### Samples
+
+[Details from docs](https://pflooky.github.io/data-caterer-docs/get-started/docker/).  
+Docker compose sample found under `docker` folder.
+
+```shell
+cd docker
+docker-compose up -d datacaterer
+```
+
+Check result under [here](docker/data/custom).
+  
+Change to another data source via:
+- postgres
+- mysql
+- cassandra
+- solace
+- kafka
+- http
+  
+```shell
+DATA_SOURCE=cassandra docker-compose up -d datacaterer
+```
+
+## Helm
+
+```shell
+helm install data-caterer ./data-caterer-example/helm/data-caterer
+```

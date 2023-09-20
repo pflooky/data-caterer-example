@@ -23,4 +23,12 @@ gradle-app.setting
 # Ignore Gradle build output directory
 build
 .idea
-docker
+
+docker/data/custom/csv
+docker/data/custom/json
+docker/data/custom/parquet
+docker/data/custom/generated
+docker/data/custom/recordTracking
+docker/data/custom/report
+
+docs

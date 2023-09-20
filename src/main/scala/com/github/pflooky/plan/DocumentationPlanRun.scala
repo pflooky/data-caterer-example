@@ -50,5 +50,5 @@ class DocumentationPlanRun extends PlanRun {
   val foreignKeySetup = plan
     .addForeignKeyRelationship(jsonTask, List("account_id", "_join_txn_name"), List((csvTxns, List("account_id", "name"))))
 
-  execute(foreignKeySetup, configuration, jsonTask, csvTxns)
+  execute(foreignKeySetup, configuration.generatedReportsFolderPath(baseFolder + "/report"), jsonTask, csvTxns)
 }

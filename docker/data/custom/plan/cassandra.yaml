@@ -1,0 +1,11 @@
+name: "cassandra_example_plan"
+description: "Create accounts data in Cassandra"
+tasks:
+  - name: "cassandra_accounts"
+    dataSourceName: "cassandra"
+    enabled: true
+
+sinkOptions:
+  foreignKeys:
+    "cassandra.accounts.account_id":
+      - "cassandra.account_status_history.account_id"
