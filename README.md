@@ -36,13 +36,22 @@ Requires:
 Create your own Docker image via:
   
 ```shell
+cd docker
 ./gradlew clean build
 docker build -t <my_image_name>:<my_image_tag> .
 docker run -e PLAN_CLASS=com.github.pflooky.plan.DocumentationPlanRun -v ${PWD}/docs/run:/opt/app/data <my_image_name>:<my_image_tag>
 #check results under docs/run folder
 ```
 
-### Samples
+## Docker Compose
+
+Run with own class from either Java or Scala API:
+  
+```shell
+./gradlew clean build
+cd docker
+PLAN_CLASS=com.github.pflooky.plan.DocumentationPlanRun DATA_SOURCE=postgres docker-compose up -d datacaterer
+```
 
 [Details from docs](https://pflooky.github.io/data-caterer-docs/get-started/docker/).  
 Docker compose sample found under `docker` folder.

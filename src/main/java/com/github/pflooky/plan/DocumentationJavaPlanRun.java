@@ -28,7 +28,7 @@ public class DocumentationJavaPlanRun extends PlanRun {
                                 .type(ArrayType.instance())
                                 .schema(
                                         field().name("updated_time").type(TimestampType.instance()).min(Timestamp.valueOf("2022-01-01 00:00:00")),
-                                        field().name("status").oneOf(accountStatus)
+                                        field().name("status").oneOf((Object[]) accountStatus)
                                 ),
                         field().name("customer_details")
                                 .schema(

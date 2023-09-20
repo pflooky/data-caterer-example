@@ -1,8 +1,9 @@
 version: "3.9"
 services:
   datacaterer:
-    image: "datacatering/data-caterer-basic:0.3.11"
+    build: ../
     environment:
+      - "PLAN_CLASS=${PLAN_CLASS:-}"
       - "APPLICATION_CONFIG_PATH=${APPLICATION_CONFIG_PATH:-/opt/app/custom/application.conf}"
       - "PLAN_FILE_PATH=/opt/app/custom/${PLAN:-plan/${DATA_SOURCE:-postgres}}.yaml"
       - "ENABLE_GENERATE_DATA=${ENABLE_GENERATE_DATA:-true}"
