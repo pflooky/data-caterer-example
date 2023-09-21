@@ -32,6 +32,7 @@ Requires:
 ```shell
 ./run.sh
 <input class name>
+#check results under docker/sample/report/index.html folder
 ```
 
 ## Docker

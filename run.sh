@@ -20,8 +20,7 @@ fi
 echo "Running Data Caterer via docker, version: $data_caterer_version"
 docker run -p 4040:4040 \
   -v "$(pwd)/build/libs/data-caterer-example-0.1.0.jar:/opt/spark/jars/data-caterer.jar" \
-  -v "$(pwd)/docker/report:/opt/app/report" \
-  -v "$(pwd)/docker/data:/opt/app/data" \
+  -v "$(pwd)/docker/sample:/opt/app/data" \
   -e "PLAN_CLASS=$class_name" \
   -e "DRIVER_MEMORY=2g" \
   -e "EXECUTOR_MEMORY=2g" \

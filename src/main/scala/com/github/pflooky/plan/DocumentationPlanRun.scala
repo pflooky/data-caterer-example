@@ -32,6 +32,9 @@ class DocumentationPlanRun extends PlanRun {
       field.name("_join_txn_name").expression("#{Name.name}").omit(true)
     )
     .count(count.records(100))
+    .validations(
+      validation.expr("year >= 2022")
+    )
 
   val csvTxns = csv("transactions", s"$baseFolder/csv", Map("saveMode" -> "overwrite", "header" -> "true"))
     .schema(
@@ -46,9 +49,18 @@ class DocumentationPlanRun extends PlanRun {
         .records(100)
         .recordsPerColumnGenerator(generator.min(1).max(2), "account_id", "name")
     )
+    .validations(
+      validation.expr("LENGTH(merchant) > 0").description("Merchant should not be empty"),
+      validation.expr("amount > 15").description("Most amounts should be greater than $15").errorThreshold(5)
+    )
 
   val foreignKeySetup = plan
     .addForeignKeyRelationship(jsonTask, List("account_id", "_join_txn_name"), List((csvTxns, List("account_id", "name"))))
 
-  execute(foreignKeySetup, configuration.generatedReportsFolderPath(baseFolder + "/report"), jsonTask, csvTxns)
+  val conf = configuration
+    .generatedReportsFolderPath(baseFolder + "/report")
+    .enableSinkMetadata(true)
+    .enableValidation(true)
+
+  execute(foreignKeySetup, conf, jsonTask, csvTxns)
 }

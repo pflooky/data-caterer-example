@@ -38,7 +38,10 @@ public class DocumentationJavaPlanRun extends PlanRun {
                                 ),
                         field().name("_join_txn_name").expression("#{Name.name}").omit(true)
                 )
-                .count(count().records(100));
+                .count(count().records(100))
+                .validations(
+                        validation().expr("year >= 2022")
+                );
 
         var csvTxns = csv("transactions", baseFolder + "/csv", Map.of(Constants.SAVE_MODE(), "overwrite", "header", "true"))
                 .schema(
@@ -52,6 +55,10 @@ public class DocumentationJavaPlanRun extends PlanRun {
                         count()
                                 .records(100)
                                 .recordsPerColumnGenerator(generator().min(1).max(2), "account_id", "name")
+                )
+                .validations(
+                        validation().expr("LENGTH(merchant) > 0").description("Merchant should not be empty"),
+                        validation().expr("amount > 15").description("Most amounts should be greater than $15").errorThreshold(5)
                 );
 
         var foreignKeySetup = plan()
@@ -60,6 +67,11 @@ public class DocumentationJavaPlanRun extends PlanRun {
                         List.of(Map.entry(csvTxns, List.of("account_id", "name")))
                 );
 
-        execute(foreignKeySetup, configuration().generatedReportsFolderPath(baseFolder + "/report"), jsonTask, csvTxns);
+        var conf = configuration()
+                .generatedReportsFolderPath(baseFolder + "/report")
+                .enableSinkMetadata(true)
+                .enableValidation(true);
+
+        execute(foreignKeySetup, conf, jsonTask, csvTxns);
     }
 }

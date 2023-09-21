@@ -30,5 +30,6 @@ docker/data/custom/parquet
 docker/data/custom/generated
 docker/data/custom/recordTracking
 docker/data/custom/report
+docker/sample
 
 docs
