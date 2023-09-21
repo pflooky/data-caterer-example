@@ -28,5 +28,5 @@ class ValidationPlanRun extends PlanRun {
       validation.expr("balance > 500").errorThreshold(0.1),
     )
 
-  execute(jsonTask)
+  execute(configuration.enableValidation(true), jsonTask)
 }
