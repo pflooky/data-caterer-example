@@ -17,9 +17,6 @@ plugins {
 repositories {
     // Use Maven Central for resolving dependencies.
     mavenCentral()
-    maven {
-        url = uri("https://s01.oss.sonatype.org/content/repositories/releases")
-    }
 }
 
 dependencies {
