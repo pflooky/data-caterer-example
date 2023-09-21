@@ -27,7 +27,6 @@ Can follow detailed documentation found [here](https://pflooky.github.io/data-ca
 Requires:
 
 - Docker
-- Gradle
 
 ```shell
 ./run.sh

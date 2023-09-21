@@ -11,7 +11,7 @@ if [[ "$class_name" == *"Advanced"* ]]; then
 fi
 
 echo "Building jar with plan run"
-gradle clean build
+./gradlew clean build
 if [[ $? -ne 0 ]]; then
   echo "Failed to build!"
   exit 1
