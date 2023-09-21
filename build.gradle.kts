@@ -18,17 +18,13 @@ repositories {
     // Use Maven Central for resolving dependencies.
     mavenCentral()
     maven {
-        url = uri("https://maven.pkg.github.com/pflooky/data-caterer")
-        credentials {
-            username = System.getenv("GITHUB_USER")
-            password = System.getenv("GITHUB_TOKEN")
-        }
+        url = uri("https://s01.oss.sonatype.org/content/repositories/releases")
     }
 }
 
 dependencies {
     compileOnly("org.scala-lang:scala-library:$scalaSpecificVersion")
 
-    implementation("org.data-catering:data-caterer-api:$dataCatererVersion")
+    implementation("io.github.pflooky:data-caterer-api:$dataCatererVersion")
 }
 
