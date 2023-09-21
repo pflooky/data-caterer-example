@@ -6,11 +6,6 @@ files to help with setup or customisation that are all run via Docker.
 
 This repo contains example Java and Scala API usage for Data Caterer.
 
-Paid version includes the following:
-
-- Ability to generate data from just defining data connections or schema example
-- Delete generated records
-
 ## How
 
 Can follow detailed documentation found [here](https://pflooky.github.io/data-caterer-docs/setup/) for more details.
@@ -89,3 +84,11 @@ DATA_SOURCE=cassandra docker-compose up -d datacaterer
 ```shell
 helm install data-caterer ./data-caterer-example/helm/data-caterer
 ```
+
+## Paid Version
+
+Paid version includes the following:
+
+- Ability to generate data from just defining data connections or schema example
+- Delete generated records
+- Event data generation
