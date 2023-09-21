@@ -1,6 +1,15 @@
 # data-caterer-example
 
-Example Java and Scala API usage for Data Caterer
+Data Caterer is a metadata driven data generation tool that aids in creating production like data across batch and event
+data systems. Run data validations to ensure your systems have ingested it as expected. Use the Java, Scala API, or YAML
+files to help with setup or customisation that are all run via Docker.
+
+This repo contains example Java and Scala API usage for Data Caterer.
+
+Paid version includes the following:
+
+- Ability to generate data from just defining data connections or schema example
+- Delete generated records
 
 ## How
 
@@ -23,8 +32,7 @@ Can follow detailed documentation found [here](https://pflooky.github.io/data-ca
 Requires:
 
 - Docker
-- Access to Data Caterer library
-  - `GITHUB_USER`, `GITHUB_TOKEN` environment variables
+- Gradle
 
 ```shell
 ./run.sh
@@ -34,7 +42,7 @@ Requires:
 ## Docker
 
 Create your own Docker image via:
-  
+
 ```shell
 cd docker
 ./gradlew clean build
@@ -46,7 +54,7 @@ docker run -e PLAN_CLASS=com.github.pflooky.plan.DocumentationPlanRun -v ${PWD}/
 ## Docker Compose
 
 Run with own class from either Java or Scala API:
-  
+
 ```shell
 ./gradlew clean build
 cd docker
@@ -62,15 +70,16 @@ docker-compose up -d datacaterer
 ```
 
 Check result under [here](docker/data/custom).
-  
+
 Change to another data source via:
+
 - postgres
 - mysql
 - cassandra
 - solace
 - kafka
 - http
-  
+
 ```shell
 DATA_SOURCE=cassandra docker-compose up -d datacaterer
 ```
