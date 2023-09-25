@@ -8,8 +8,10 @@ import com.github.pflooky.datacaterer.api.PlanRun
 class AdvancedAutomatedPlanRun extends PlanRun {
 
   val autoRun = configuration
-    .postgres("my_postgres", "jdbc:postgresql://postgresserver:5432/customer")
+    .postgres("my_postgres", "jdbc:postgresql://host.docker.internal:5432/customer")
+    .enableUniqueCheck(true)
     .enableGeneratePlanAndTasks(true)
+    .generatedPlanAndTaskFolderPath("/opt/app/data/generated")
 
   execute(configuration = autoRun)
 }
@@ -23,8 +25,10 @@ class AdvancedAutomatedWithFilterPlanRun extends PlanRun {
     .postgres(
       "my_postgres",
       "jdbc:postgresql://host.docker.internal:5432/customer",
+      options = Map("filterOutTable" -> "balances, transactions")
     )
     .enableGeneratePlanAndTasks(true)
+    .generatedPlanAndTaskFolderPath("/opt/app/data/generated")
     .enableUniqueCheck(true)
 
   execute(configuration = autoRun)

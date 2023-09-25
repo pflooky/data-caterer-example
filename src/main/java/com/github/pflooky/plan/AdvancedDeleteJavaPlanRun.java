@@ -2,15 +2,15 @@ package com.github.pflooky.plan;
 
 import com.github.pflooky.datacaterer.java.api.PlanRun;
 
-import java.util.Map;
-
-public class AdvancedAutomatedJavaPlanRun extends PlanRun {
+public class AdvancedDeleteJavaPlanRun extends PlanRun {
     {
         var autoRun = configuration()
                 .postgres("my_postgres", "jdbc:postgresql://host.docker.internal:5432/customer")
                 .enableGeneratePlanAndTasks(true)
-                .generatedPlanAndTaskFolderPath("/opt/app/data/generated")
+                .enableRecordTracking(true)
+                .enableDeleteGeneratedRecords(false)
                 .enableUniqueCheck(true)
+                .generatedPlanAndTaskFolderPath("/opt/app/data/generated")
                 .generatedReportsFolderPath("/opt/app/data/report");
 
         execute(autoRun);

@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS account.accounts
     account_status          VARCHAR(10),
     created_by              TEXT,
     created_by_fixed_length CHAR(10),
-    customer_id_int         INT UNIQUE,
+    customer_id_int         INT,
     customer_id_smallint    SMALLINT,
     customer_id_bigint      BIGINT,
     customer_id_decimal     DECIMAL,
