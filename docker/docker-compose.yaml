@@ -110,6 +110,9 @@ services:
 
   solace:
     image: "alpine:3.18.3"
+    entrypoint: [ "/bin/sh", "-c", "/opt/app/setup_solace.sh" ]
+    volumes:
+      - "./data/solace:/opt/app"
     depends_on:
       solaceserver:
         condition: "service_healthy"
@@ -169,6 +172,8 @@ services:
   kafka:
     image: "confluentinc/confluent-local:7.4.1"
     entrypoint: [ "/bin/sh", "-c", "/opt/app/setup_kafka.sh" ]
+    volumes:
+      - "./data/kafka:/opt/app"
     depends_on:
       kafkaserver:
         condition: "service_healthy"

@@ -32,4 +32,6 @@ docker/data/custom/recordTracking
 docker/data/custom/report
 docker/sample
 
+.tmp_prev_class_name
+
 docs

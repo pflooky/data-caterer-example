@@ -5,13 +5,13 @@ import com.github.pflooky.datacaterer.api.model.{ArrayType, DateType, DoubleType
 
 import java.sql.Date
 
-class KafkaPlanRun extends PlanRun {
+class AdvancedKafkaPlanRun extends PlanRun {
 
   val kafkaTask = kafka("my_kafka", "kafkaserver:29092")
     .topic("account-topic")
     .schema(
       field.name("key").sql("content.account_id"),
-      field.name("value").sql("to_json(content)"),
+      field.name("value").sql("TO_JSON(content)"),
       //field.name("partition").type(IntegerType),  can define partition here
       field.name("headers")
         .`type`(ArrayType)
@@ -23,13 +23,13 @@ class KafkaPlanRun extends PlanRun {
         ),
       field.name("content")
         .schema(
-          field.name("account_id"),
-          field.name("year").`type`(IntegerType),
+          field.name("account_id").regex("ACC[0-9]{8}"),
+          field.name("year").`type`(IntegerType).min(2021).max(2023),
           field.name("amount").`type`(DoubleType),
           field.name("details")
             .schema(
               field.name("name").expression("#{Name.name}"),
-              field.name("txn_date").`type`(DateType).min(Date.valueOf("2021-01-01")).max("2021-12-31"),
+              field.name("first_txn_date").`type`(DateType).sql("ELEMENT_AT(SORT_ARRAY(content.transactions.txn_date), 1)"),
               field.name("updated_by")
                 .schema(
                   field.name("user"),
@@ -38,10 +38,12 @@ class KafkaPlanRun extends PlanRun {
             ),
           field.name("transactions").`type`(ArrayType)
             .schema(
-              field.name("txn_date").`type`(DateType),
+              field.name("txn_date").`type`(DateType).min(Date.valueOf("2021-01-01")).max("2021-12-31"),
               field.name("amount").`type`(DoubleType),
             )
-        )
+        ),
+      field.name("tmp_year").sql("content.year").omit(true),
+      field.name("tmp_name").sql("content.details.name").omit(true)
     )
 
   execute(kafkaTask)
