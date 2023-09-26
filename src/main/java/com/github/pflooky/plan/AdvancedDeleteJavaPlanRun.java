@@ -11,6 +11,7 @@ public class AdvancedDeleteJavaPlanRun extends PlanRun {
                 .enableDeleteGeneratedRecords(false)
                 .enableUniqueCheck(true)
                 .generatedPlanAndTaskFolderPath("/opt/app/data/generated")
+                .recordTrackingFolderPath("/opt/app/data/recordTracking")
                 .generatedReportsFolderPath("/opt/app/data/report");
 
         execute(autoRun);
