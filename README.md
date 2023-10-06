@@ -1,5 +1,7 @@
 # data-caterer-example
 
+![Data Catering](misc/logo/logo_landscape_banner.svg)
+
 Data Caterer is a metadata driven data generation tool that aids in creating production like data across batch and event
 data systems. Run data validations to ensure your systems have ingested it as expected. Use the Java, Scala API, or YAML
 files to help with setup or customisation that are all run via Docker.
@@ -83,11 +85,3 @@ DATA_SOURCE=cassandra docker-compose up -d datacaterer
 ```shell
 helm install data-caterer ./data-caterer-example/helm/data-caterer
 ```
-
-## Paid Version
-
-Paid version includes the following:
-
-- Ability to generate data from just defining data connections or schema example
-- Delete generated records
-- Event data generation

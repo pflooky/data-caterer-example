@@ -61,6 +61,17 @@ public class DocumentationJavaPlanRun extends PlanRun {
                         validation().expr("amount > 15").description("Most amounts should be greater than $15").errorThreshold(5)
                 );
 
+        var postgresValidateTask = postgres("my_postgres", "jdbc:postgresql://host.docker.internal:5432/customer")
+                .table("account", "accounts")
+                .validations(
+                        validation().col("account_id").isNotNull(),
+                        validation().col("name").matches("[A-Z][a-z]+ [A-Z][a-z]+").errorThreshold(0.2).description("Some names have different formats"),
+                        validation().col("balance").greaterThanOrEqual(0).errorThreshold(10).description("Account can have negative balance if overdraft"),
+                        validation().expr("CASE WHEN status == 'closed' THEN isNotNull(close_date) ELSE isNull(close_date) END"),
+                        validation().unique("account_id", "name"),
+                        validation().groupBy("account_id", "name").max("login_retry").lessThan(10)
+                );
+
         var foreignKeySetup = plan()
                 .addForeignKeyRelationship(
                         jsonTask, List.of("account_id", "_join_txn_name"),
