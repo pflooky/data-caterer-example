@@ -27,6 +27,6 @@ public class AdvancedMetadataSourceJavaPlanRun extends PlanRun {
         var conf = configuration().enableGeneratePlanAndTasks(true)
                 .generatedReportsFolderPath("/opt/app/data/report");
 
-        execute(conf, csvTask, postgresTask);
+        execute(myPlan, conf, csvTask, postgresTask);
     }
 }
