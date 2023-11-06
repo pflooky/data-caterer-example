@@ -6,15 +6,26 @@ if [[ -s ".tmp_prev_class_name" ]]; then
 else
   prev_class_name='DocumentationPlanRun'
 fi
-read -p "Class name of plan to run [$prev_class_name]: " class_name
 
-curr_class_name=${class_name:-$prev_class_name}
+if [[ $# -eq 0 ]]; then
+  read -p "Class name of plan to run [$prev_class_name]: " class_name
+  curr_class_name=${class_name:-$prev_class_name}
+else
+  curr_class_name=$1
+fi
+
 full_class_name=com.github.pflooky.plan.$curr_class_name
 echo -n "$curr_class_name" > .tmp_prev_class_name
 
 image_suffix="-basic"
+additional_env_vars=""
 if [[ "$curr_class_name" == *"Advanced"* ]]; then
-  image_suffix=""
+  if [[ -z "$DATA_CATERING_API_KEY" ]]; then
+    image_suffix=""
+  else
+    image_suffix="-trial"
+    additional_env_vars=" -e API_KEY=$DATA_CATERING_API_KEY"
+  fi
 fi
 
 echo "Building jar with plan run"
@@ -25,13 +36,18 @@ if [[ $? -ne 0 ]]; then
 fi
 
 echo "Running Data Caterer via docker, version: $data_caterer_version"
-docker run -p 4040:4040 \
-  -v "$(pwd)/build/libs/data-caterer-example-0.1.0.jar:/opt/spark/jars/data-caterer.jar" \
-  -v "$(pwd)/docker/sample:/opt/app/data" \
-  -e "PLAN_CLASS=$full_class_name" \
-  -e "DRIVER_MEMORY=2g" \
-  -e "EXECUTOR_MEMORY=2g" \
-  --network "docker_default" \
+DOCKER_CMD=(
+  docker run -p 4040:4040
+  -v "$(pwd)/build/libs/data-caterer-example-0.1.0.jar:/opt/spark/jars/data-caterer.jar"
+  -v "$(pwd)/docker/sample:/opt/app/data"
+  -v "$(pwd)/docker/mount:/opt/app/mount"
+  -e "PLAN_CLASS=$full_class_name"
+  -e "DRIVER_MEMORY=2g"
+  -e "EXECUTOR_MEMORY=2g"
+  "$additional_env_vars"
+  --network "docker_default"
   datacatering/data-caterer"$image_suffix":"$data_caterer_version"
+)
 
+eval "${DOCKER_CMD[@]}"
 echo "Finished!"

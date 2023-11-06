@@ -12,6 +12,7 @@ class AdvancedAutomatedPlanRun extends PlanRun {
     .enableUniqueCheck(true)
     .enableGeneratePlanAndTasks(true)
     .generatedPlanAndTaskFolderPath("/opt/app/data/generated")
+    .generatedReportsFolderPath("/opt/app/data/report")
 
   execute(configuration = autoRun)
 }

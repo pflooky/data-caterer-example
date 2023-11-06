@@ -5,7 +5,7 @@ import com.github.pflooky.datacaterer.api.model.{DateType, DoubleType, Timestamp
 
 class CsvPlan extends PlanRun {
 
-  val accountTask = csv("customer_accounts", "/opt/app/data/customer/account", Map("header" -> "true"))
+  val accountTask = csv("customer_accounts", "/opt/app/data/customer/account", Map("header" -> "true", "saveMode" -> "overwrite"))
     .schema(
       field.name("account_id").regex("ACC[0-9]{8}").unique(true),
       field.name("balance").`type`(DoubleType).min(1).max(1000),
@@ -16,7 +16,7 @@ class CsvPlan extends PlanRun {
     )
     .count(count.records(100))
 
-  val transactionTask = csv("customer_transactions", "/opt/app/data/customer/transaction", Map("header" -> "true"))
+  val transactionTask = csv("customer_transactions", "/opt/app/data/customer/transaction", Map("header" -> "true", "saveMode" -> "overwrite"))
     .schema(
       field.name("account_id"),
       field.name("full_name"),
@@ -24,7 +24,7 @@ class CsvPlan extends PlanRun {
       field.name("time").`type`(TimestampType).min(java.sql.Date.valueOf("2022-01-01")),
       field.name("date").`type`(DateType).sql("DATE(time)")
     )
-    .count(count.recordsPerColumnGenerator(generator.min(0).max(5), "account_id", "full_name"))
+    .count(count.recordsPerColumnGenerator(generator.min(1).max(5), "account_id", "full_name"))
 
   val config = configuration
     .generatedReportsFolderPath("/opt/app/data/report")
