@@ -1,20 +1,19 @@
 package com.github.pflooky.plan
 
 import com.github.pflooky.datacaterer.api.PlanRun
-import com.github.pflooky.datacaterer.api.model.{ArrayType, DateType, DoubleType, IntegerType, TimestampType}
+import com.github.pflooky.datacaterer.api.model.{ArrayType, BinaryType, DateType, DoubleType, HeaderType, IntegerType, StringType, StructType, TimestampType}
 
 import java.sql.Date
 
-class AdvancedKafkaPlanRun extends PlanRun {
+class AdvancedSolacePlanRun extends PlanRun {
 
-  val kafkaTask = kafka("my_kafka", "kafkaserver:29092")
-    .topic("account-topic")
+  val solaceTask = solace("my_solace", "smf://host.docker.internal:55554")
+    .destination("/JNDI/Q/rest_test_queue")
     .schema(
-      field.name("key").sql("content.account_id"),
       field.name("value").sql("TO_JSON(content)"),
-      //field.name("partition").type(IntegerType),  can define partition here
-      field.name("headers")
-        .`type`(ArrayType)
+      //field.name("partition").`type`(IntegerType), //can define message JMS priority here
+      field.name("headers") //set message properties via headers field
+        .`type`(HeaderType.getType)
         .sql(
           """ARRAY(
             |  NAMED_STRUCT('key', 'account-id', 'value', TO_BINARY(content.account_id, 'utf-8')),
@@ -42,7 +41,7 @@ class AdvancedKafkaPlanRun extends PlanRun {
               field.name("amount").`type`(DoubleType),
             )
         ),
-    )
+    ).count(count.records(10))
 
-  execute(kafkaTask)
+  execute(solaceTask)
 }

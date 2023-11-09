@@ -23,6 +23,7 @@ public class AdvancedOpenMetadataSourceJavaPlanRun extends PlanRun {
                 .count(count().records(10));
 
         var conf = configuration().enableGeneratePlanAndTasks(true)
+                .enableGenerateValidations(true)
                 .generatedReportsFolderPath("/opt/app/data/report");
 
         execute(conf, jsonTask);

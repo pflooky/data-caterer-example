@@ -21,6 +21,7 @@ class AdvancedOpenMetadataSourcePlanRun extends PlanRun {
     .count(count.records(10))
 
   val conf = configuration.enableGeneratePlanAndTasks(true)
+    .enableGenerateValidations(true)
     .generatedReportsFolderPath("/opt/app/data/report")
 
   execute(conf, jsonTask)

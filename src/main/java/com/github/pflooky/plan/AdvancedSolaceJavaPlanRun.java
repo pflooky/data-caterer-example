@@ -1,36 +1,28 @@
 package com.github.pflooky.plan;
 
-import com.github.pflooky.datacaterer.api.connection.ConnectionTaskBuilder;
-import com.github.pflooky.datacaterer.api.connection.KafkaBuilder;
 import com.github.pflooky.datacaterer.api.model.ArrayType;
 import com.github.pflooky.datacaterer.api.model.DateType;
 import com.github.pflooky.datacaterer.api.model.DoubleType;
+import com.github.pflooky.datacaterer.api.model.HeaderType;
 import com.github.pflooky.datacaterer.api.model.IntegerType;
+import com.github.pflooky.datacaterer.api.model.StringType;
+import com.github.pflooky.datacaterer.api.model.StructType;
 import com.github.pflooky.datacaterer.api.model.TimestampType;
 import com.github.pflooky.datacaterer.java.api.PlanRun;
+import scala.Tuple2;
 
 import java.sql.Date;
-import java.util.Map;
+import java.util.List;
 
-public class AdvancedKafkaJavaPlanRun extends PlanRun {
+public class AdvancedSolaceJavaPlanRun extends PlanRun {
     {
-        var kafkaTask = getKafkaTask();
-
-        var conf = configuration()
-                .generatedReportsFolderPath("/opt/app/data/report");
-
-        execute(conf, kafkaTask);
-    }
-
-    public ConnectionTaskBuilder<KafkaBuilder> getKafkaTask() {
-        return kafka("my_kafka", "kafkaserver:29092")
-                .topic("account-topic")
+        var solaceTask = solace("my_solace", "smf://host.docker.internal:55554")
+                .destination("/JNDI/Q/rest_test_queue")
                 .schema(
-                        field().name("key").sql("content.account_id"),
                         field().name("value").sql("TO_JSON(content)"),
-                        //field().name("partition").type(IntegerType.instance()),  can define partition here
-                        field().name("headers")
-                                .type(ArrayType.instance())
+                        //field().name("partition").type(IntegerType.instance()),   //can define message JMS priority here
+                        field().name("headers") //set message properties via headers field
+                                .type(HeaderType.getType())
                                 .sql(
                                         "ARRAY(" +
                                                 "NAMED_STRUCT('key', 'account-id', 'value', TO_BINARY(content.account_id, 'utf-8'))," +
@@ -59,6 +51,11 @@ public class AdvancedKafkaJavaPlanRun extends PlanRun {
                                                 )
                                 )
                 )
-                .count(count().records(100));
+                .count(count().records(10));
+
+        var conf = configuration()
+                .generatedReportsFolderPath("/opt/app/data/report");
+
+        execute(conf, solaceTask);
     }
 }

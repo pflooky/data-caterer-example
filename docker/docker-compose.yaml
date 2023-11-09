@@ -91,7 +91,7 @@ services:
       - "${HOME}/data/solace:/var/lib/solace"
     healthcheck:
       test: [ "CMD-SHELL", "curl", "--output", "/dev/null", "--silent", "--head", "--fail", "http://solaceserver:8080" ]
-      interval: "15s"
+      interval: "30s"
       timeout: "5s"
       retries: 3
     ports:
