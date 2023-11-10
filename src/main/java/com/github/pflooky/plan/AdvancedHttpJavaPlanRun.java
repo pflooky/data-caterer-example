@@ -1,10 +1,13 @@
 package com.github.pflooky.plan;
 
+import com.github.pflooky.datacaterer.api.model.Constants;
 import com.github.pflooky.datacaterer.java.api.PlanRun;
+
+import java.util.Map;
 
 public class AdvancedHttpJavaPlanRun extends PlanRun {
     {
-        var httpTask = http("my_http")
+        var httpTask = http("my_http", Map.of(Constants.ROWS_PER_SECOND(), "1"))
                 .schema(metadataSource().openApi("/opt/app/mount/http/petstore.json"))
                 .schema(field().name("bodyContent").schema(field().name("id").regex("ID[0-9]{8}")))
                 .count(count().records(2));
