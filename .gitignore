@@ -34,4 +34,5 @@ docker/sample
 
 .tmp_prev_class_name
 
-docs
+*.cast
+*.gif

@@ -1,14 +1,14 @@
 package com.github.pflooky.plan
 
 import com.github.pflooky.datacaterer.api.PlanRun
-import com.github.pflooky.datacaterer.api.model.{DateType, DoubleType, TimestampType}
+import com.github.pflooky.datacaterer.api.model.{DateType, DecimalType, DoubleType, TimestampType}
 
 class CsvPlan extends PlanRun {
 
   val accountTask = csv("customer_accounts", "/opt/app/data/customer/account", Map("header" -> "true", "saveMode" -> "overwrite"))
     .schema(
       field.name("account_id").regex("ACC[0-9]{8}").unique(true),
-      field.name("balance").`type`(DoubleType).min(1).max(1000),
+      field.name("balance").`type`(new DecimalType(5, 2)).min(1).max(1000),
       field.name("created_by").sql("CASE WHEN status IN ('open', 'closed') THEN 'eod' ELSE 'event' END"),
       field.name("name").expression("#{Name.name}"),
       field.name("open_time").`type`(TimestampType).min(java.sql.Date.valueOf("2022-01-01")),
@@ -20,7 +20,7 @@ class CsvPlan extends PlanRun {
     .schema(
       field.name("account_id"),
       field.name("full_name"),
-      field.name("amount").`type`(DoubleType).min(1).max(100),
+      field.name("amount").`type`(new DecimalType(4, 2)).min(1).max(100),
       field.name("time").`type`(TimestampType).min(java.sql.Date.valueOf("2022-01-01")),
       field.name("date").`type`(DateType).sql("DATE(time)")
     )
