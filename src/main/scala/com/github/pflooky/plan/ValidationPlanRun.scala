@@ -1,32 +1,31 @@
 package com.github.pflooky.plan
 
 import com.github.pflooky.datacaterer.api.PlanRun
-import com.github.pflooky.datacaterer.api.model.{ArrayType, DateType, DoubleType}
 
-import java.sql.Date
+import java.sql.Timestamp
 
 class ValidationPlanRun extends PlanRun {
 
+  //based on schema of json data from JsonPlan
   val jsonTask = json("my_json", "/opt/app/data/json")
-    .schema(
-      field.name("account_id").regex("ACC[0-9]{8}"),
-      field.name("name").expression("#{Name.name}"),
-      field.name("open_date").`type`(DateType).min(Date.valueOf("2022-01-01")),
-      field.name("balance").`type`(DoubleType).min(100).max(10000),
-      field.name("txn_list")
-        .`type`(ArrayType)
-        .schema(
-          field.name("id"),
-          field.name("date").`type`(DateType).min(Date.valueOf("2022-01-01")),
-          field.name("amount").`type`(DoubleType),
-        )
-    )
-    .validationWait(waitCondition.pause(2))
     .validations(
-      validation.expr("LENGTH(name) > 3").description("Name should have more than 3 characters"),
-      validation.expr("open_date IS NOT NULL").errorThreshold(10),
-      validation.expr("balance > 500").errorThreshold(0.1),
+      validation.col("customer_details.name").matches("[A-Z][a-z]+ [A-Z][a-z]+").errorThreshold(0.1).description("Names generally follow the same pattern"),
+      validation.col("date").isNotNull.errorThreshold(10),
+      validation.col("balance").greaterThan(500),
+      validation.expr("YEAR(date) == year"),
+      validation.col("status").in("open", "closed", "pending").errorThreshold(0.2).description("Could be new status introduced"),
+      validation.col("customer_details.age").greaterThan(18),
+      validation.expr("FORALL(update_history, x -> x.updated_time > TIMESTAMP('2022-01-01 00:00:00'))"),
+      validation.col("update_history").greaterThanSize(2),
+      validation.unique("account_id"),
+      validation.groupBy().count().isEqual(1000),
+      validation.groupBy("account_id").max("balance").lessThan(900)
     )
 
-  execute(configuration.enableValidation(true), jsonTask)
+  val config = configuration
+    .generatedReportsFolderPath("/opt/app/data/report")
+    .enableValidation(true)
+    .enableGenerateData(false)
+
+  execute(config, jsonTask)
 }
