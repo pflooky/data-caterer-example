@@ -8,7 +8,7 @@ import java.sql.Date
 class AdvancedSolacePlanRun extends PlanRun {
 
   val solaceTask = solace("my_solace", "smf://host.docker.internal:55554")
-    .destination("/JNDI/Q/rest_test_queue")
+    .destination("/JNDI/T/rest_test_topic")
     .schema(
       field.name("value").sql("TO_JSON(content)"),
       //field.name("partition").`type`(IntegerType), //can define message JMS priority here
@@ -43,5 +43,8 @@ class AdvancedSolacePlanRun extends PlanRun {
         ),
     ).count(count.records(10))
 
-  execute(solaceTask)
+  val config = configuration
+    .generatedReportsFolderPath("/opt/app/data/report")
+
+  execute(config, solaceTask)
 }

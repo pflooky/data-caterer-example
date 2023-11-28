@@ -5,20 +5,25 @@ import com.github.pflooky.datacaterer.api.model.Constants.{OPEN_METADATA_AUTH_TY
 
 class AdvancedOpenMetadataSourcePlanRun extends PlanRun {
 
+  val openMetadataSource = metadataSource.openMetadata(
+    "http://host.docker.internal:8585/api",
+    OPEN_METADATA_AUTH_TYPE_OPEN_METADATA,
+    Map(
+      OPEN_METADATA_JWT_TOKEN -> "abc123", //find under settings/bots/ingestion-bot/token
+      OPEN_METADATA_TABLE_FQN -> "sample_data.ecommerce_db.shopify.raw_customer"
+    )
+  )
+
   val jsonTask = json("my_json", "/opt/app/data/json", Map("saveMode" -> "overwrite"))
-    .schema(metadataSource.openMetadata(
-      "http://host.docker.internal:8585/api",
-      OPEN_METADATA_AUTH_TYPE_OPEN_METADATA,
-      Map(
-        OPEN_METADATA_JWT_TOKEN -> "abc123", //find under settings/bots/ingestion-bot/token
-        OPEN_METADATA_TABLE_FQN -> "sample_data.ecommerce_db.shopify.raw_customer"
-      )
-    ))
+    .schema(openMetadataSource)
     .schema(
       field.name("platform").oneOf("website", "mobile"),
       field.name("customer").schema(field.name("sex").oneOf("M", "F", "O"))
     )
     .count(count.records(10))
+
+  val csvTask = csv("my_csv", "/opt/app/data/csv")
+    .schema(openMetadataSource)
 
   val conf = configuration.enableGeneratePlanAndTasks(true)
     .enableGenerateValidations(true)

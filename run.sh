@@ -35,6 +35,8 @@ if [[ $? -ne 0 ]]; then
   exit 1
 fi
 
+docker network create --driver bridge docker_default || true
+
 echo "Running Data Caterer via docker, version: $data_caterer_version"
 DOCKER_CMD=(
   docker run -p 4040:4040
