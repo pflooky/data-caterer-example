@@ -22,6 +22,6 @@ repositories {
 dependencies {
     compileOnly("org.scala-lang:scala-library:$scalaSpecificVersion")
 
-    implementation("io.github.pflooky:data-caterer-api:$dataCatererVersion")
+    implementation("io.github.data-catering:data-caterer-api:$dataCatererVersion")
 }
 

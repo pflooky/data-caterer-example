@@ -44,6 +44,10 @@ class ValidationPlanRun extends PlanRun {
     .schema(baseSchema)
     .count(count.records(10))
     .validations(
+      validation.columnNames.countEqual(10),
+      validation.columnNames.countBetween(1, 3),
+      validation.columnNames.matchOrder("account_id", "year", "date"),
+      validation.columnNames.matchSet("account_id", "status"),
       validation.col("customer_details.name").matches("[A-Z][a-z]+ [A-Z][a-z]+").errorThreshold(0.1).description("Names generally follow the same pattern"),
       validation.col("date").isNotNull.errorThreshold(10),
       validation.col("balance").greaterThan(500),
