@@ -16,13 +16,13 @@ Can follow detailed documentation found [here](https://pflooky.github.io/data-ca
 
 1. Create new Java class similar
    to [DocumentationJavaPlanRun.java](src/main/java/com/github/pflooky/plan/DocumentationJavaPlanRun.java)
-   1. Needs to extend `com.github.pflooky.datacaterer.java.api.PlanRun`
+   1. Needs to extend `io.github.datacatering.datacaterer.javaapi.api.PlanRun`
 
 ### Scala
 
 1. Create new Scala class similar
    to [DocumentationPlanRun.scala](src/main/scala/com/github/pflooky/plan/DocumentationPlanRun.scala)
-   1. Needs to extend `com.github.pflooky.datacaterer.api.PlanRun`
+   1. Needs to extend `io.github.datacatering.datacaterer.api.PlanRun`
 
 ## Run
 
@@ -42,7 +42,7 @@ Create your own Docker image via:
 ```shell
 ./gradlew clean build
 docker build -t <my_image_name>:<my_image_tag> .
-docker run -e PLAN_CLASS=com.github.pflooky.plan.DocumentationPlanRun -v ${PWD}/docs/run:/opt/app/data <my_image_name>:<my_image_tag>
+docker run -e PLAN_CLASS=io.github.datacatering.plan.DocumentationPlanRun -v ${PWD}/docs/run:/opt/app/data <my_image_name>:<my_image_tag>
 #check results under docs/run folder
 ```
 
@@ -53,7 +53,7 @@ Run with own class from either Java or Scala API:
 ```shell
 ./gradlew clean build
 cd docker
-PLAN_CLASS=com.github.pflooky.plan.DocumentationPlanRun DATA_SOURCE=postgres docker-compose up -d datacaterer
+PLAN_CLASS=io.github.datacatering.plan.DocumentationPlanRun DATA_SOURCE=postgres docker-compose up -d datacaterer
 ```
 
 [Details from docs](https://pflooky.github.io/data-caterer-docs/get-started/docker/).  
@@ -84,3 +84,13 @@ DATA_SOURCE=cassandra docker-compose up -d datacaterer
 ```shell
 helm install data-caterer ./data-caterer-example/helm/data-caterer
 ```
+
+## Benchmarks
+
+Base benchmark tests can be run via:
+
+```shell
+bash benchmark/run_benchmark.sh
+```
+
+Results can be found under [benchmark/results](benchmark/results).

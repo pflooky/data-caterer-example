@@ -14,7 +14,7 @@ else
   curr_class_name=$1
 fi
 
-full_class_name=com.github.pflooky.plan.$curr_class_name
+full_class_name=io.github.datacatering.plan.$curr_class_name
 echo -n "$curr_class_name" > .tmp_prev_class_name
 
 image_suffix="-basic"
@@ -42,6 +42,7 @@ DOCKER_CMD=(
   docker run -p 4040:4040
   -v "$(pwd)/build/libs/data-caterer-example-0.1.0.jar:/opt/spark/jars/data-caterer.jar"
   -v "$(pwd)/docker/sample:/opt/app/data"
+  -v "$(pwd)/docker/sample/tracking:/opt/app/record-tracking"
   -v "$(pwd)/docker/mount:/opt/app/mount"
   -e "PLAN_CLASS=$full_class_name"
   -e "DRIVER_MEMORY=2g"

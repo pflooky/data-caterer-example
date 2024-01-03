@@ -2,11 +2,11 @@
 
 data_caterer_version=$(grep dataCatererVersion gradle.properties | cut -d= -f2)
 image_suffix="-basic"
-default_job="com.github.pflooky.plan.benchmark.BenchmarkParquetPlanRun"
+default_job="io.github.datacatering.plan.benchmark.BenchmarkParquetPlanRun"
 default_record_count="100000"
 driver_memory="DRIVER_MEMORY=2g"
 executor_memory="EXECUTOR_MEMORY=2g"
-benchmark_result_file="benchmark/results/benchmark_results.txt"
+benchmark_result_file="benchmark/results/benchmark_results_${data_caterer_version}.txt"
 num_runs=5
 uname_out="$(uname -s)"
 case "${uname_out}" in
@@ -88,7 +88,7 @@ done
 echo "Running data sink benchmarks"
 for job in "${job_names[@]}"; do
   echo "Running for job: $job"
-  full_class_name="com.github.pflooky.plan.benchmark.$job"
+  full_class_name="io.github.datacatering.plan.benchmark.$job"
   if [[ "$job" == *"Advanced"* ]]; then
     image_suffix=""
   fi

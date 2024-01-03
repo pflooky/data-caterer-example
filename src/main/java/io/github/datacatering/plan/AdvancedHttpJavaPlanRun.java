@@ -1,0 +1,26 @@
+package io.github.datacatering.plan;
+
+import io.github.datacatering.datacaterer.api.model.Constants;
+import io.github.datacatering.datacaterer.javaapi.api.PlanRun;
+
+import java.util.Map;
+
+public class AdvancedHttpJavaPlanRun extends PlanRun {
+    {
+        var httpTask = http("my_http", Map.of(Constants.ROWS_PER_SECOND(), "1"))
+                .schema(metadataSource().openApi("/opt/app/mount/http/petstore.json"))
+                .schema(field().name("bodyContent").schema(field().name("id").regex("ID[0-9]{8}")))
+                .count(count().records(2));
+
+        var myPlan = plan().addForeignKeyRelationship(
+                foreignField("my_http", "POST/pets", "bodyContent.id"),
+                foreignField("my_http", "GET/pets/{id}", "pathParamid"),
+                foreignField("my_http", "DELETE/pets/{id}", "pathParamid")
+        );
+
+        var conf = configuration().enableGeneratePlanAndTasks(true)
+                .generatedReportsFolderPath("/opt/app/data/report");
+
+        execute(myPlan, conf, httpTask);
+    }
+}
